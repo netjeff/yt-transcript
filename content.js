@@ -1,21 +1,50 @@
-// Only run on YouTube pages, otherwise show a reminder
-if (!window.location.hostname.endsWith('youtube.com')) {
-  alert('This extension only works on YouTube pages.');
-} else {
-  (async () => {
-    let transcript = '';
-    // Try to find transcript text on the page
-    const segments = Array.from(document.querySelectorAll('ytd-transcript-segment-renderer'));
-    if (segments.length > 0) {
-      transcript = segments.map(seg => seg.innerText).join('\n');
-    } else {
-      // Try fallback: look for transcript text blocks
-      const transcriptBlocks = document.querySelectorAll('[class*="transcript"] span');
-      if (transcriptBlocks.length > 0) {
-        transcript = Array.from(transcriptBlocks).map(e => e.innerText).join(' ');
-      }
+function log(msg) { try { console.log('[YT Transcript Extension]', msg); } catch(e) {} }
+
+async function doit() {
+    log('Running extension logic...');
+
+    if (!window.location.hostname.endsWith('youtube.com')) {
+        alert('This extension only works on YouTube pages.');
+        return;
     }
-    const text = `${document.title}\n${window.location.href}${transcript ? '\n\n' + transcript : ''}`;
-    await navigator.clipboard.writeText(text);
-  })();
+    
+    // If transcript is already visible, copy it
+    const transcriptSegments = document.querySelectorAll('ytd-transcript-segment-renderer');
+    if (transcriptSegments.length > 0) {
+        log('Transcript already visible, copying to clipboard.');
+        await toClipboard_withTitleUrl(transcriptSegments);
+        return;
+    }
+    // Expand the video description if collapsed
+    //    FYI:  Using querySelector("#description") does not work, 
+    //    because svg elements in DOM often include id="description" and that matches first.
+    const videoDescription = document.querySelector('div#description');
+    if (!videoDescription) {
+        log('Could not find description.');
+        return;
+    }
+    
+    log('Found description div');
+    console.log(videoDescription.outerHTML);
+
+    const expandDescriptionButton = videoDescription.querySelector('#expand');
+    if (!expandDescriptionButton) {
+        log('Could not find link/button to expand description.');
+        return;
+    }
+    expandDescriptionButton.click();
+    log('Clicked to expand description.');
+    await new Promise(res => setTimeout(res, 500));
+    
+    log('Visually confirm description is expanded');
 }
+
+
+async function toClipboard_withTitleUrl(transcriptSegments) {
+    const transcript = Array.from(transcriptSegments).map(seg => seg.innerText).join('\n');
+    const text = `${document.title}\n${window.location.href}\n\n${transcript}`;
+    await navigator.clipboard.writeText(text);
+    log('Copied transcript to clipboard.');
+}
+
+doit();
