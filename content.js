@@ -47,9 +47,20 @@ async function mainLogic() {
     }
     showTranscriptButton.click();
     log('Clicked to show transcript.');
-    await new Promise(res => setTimeout(res, 500));
 
     // Wait for transcript to become visible, then copy to clipboard
+    let transcriptCopied = false;
+    for (let i = 0; i < 8; i++) { // Wait up to 4 seconds (8 x 500ms)
+        if (await visibleTranscript_ToClipboard()) {
+            log('Transcript became visible and was copied to clipboard.');
+            transcriptCopied = true;
+            break;
+        }
+        await new Promise(res => setTimeout(res, 500));
+    }
+    if (!transcriptCopied) {
+        log('Transcript did not become visible in time.');
+    }
 }
 
 async function visibleTranscript_ToClipboard()
