@@ -4,9 +4,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message && message.ytTranscriptCopied) {
     status.textContent = 'Copied!';
     status.style.color = 'green';
-  } else {
+    setTimeout(() => { window.close(); }, 4000);
+  } else if (message && message.ytTranscriptCopyFailed) {
     status.textContent = 'Copy failed. See web console for details.';
     status.style.color = 'red';
+    setTimeout(() => { window.close(); }, 4000);
   }
 });
 
@@ -17,6 +19,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (!isYouTube) {
     status.textContent = 'This extension only works on YouTube pages.';
     status.style.color = 'red';
+    setTimeout(() => { window.close(); }, 4000);
   } else {
     status.textContent = 'Copying ...';
     status.style.color = 'black';

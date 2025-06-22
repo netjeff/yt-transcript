@@ -12,7 +12,7 @@ async function mainLogic() {
     // If transcript is already visible, copy it
     if (await visibleTranscript_ToClipboard()) {
         log('Transcript was already visible, copied to clipboard, done.');
-        notifyFailure();
+        notifySuccess();
         return;
     }
 
