@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "Youtube transcript: Copy to clipboard",
+  "name": "YouTube transcript: Copy to clipboard",
   "version": "1.0",
   "description": "Copies the transcript from YouTube videos to clipboard.",
   "permissions": ["activeTab", "scripting", "clipboardWrite"],
+  "host_permissions": ["https://www.youtube.com/*"],
   "action": {
     "default_popup": "popup.html"
   }

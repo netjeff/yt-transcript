@@ -1,20 +1,10 @@
-// content.js
-document.body.style.border = '5px solid orange';
-
-// This script will be injected to get the page title and URL.
-(() => {
-  const text = `${document.title}\n${window.location.href}`;
-  navigator.clipboard.writeText(text).then(() => {
-    // Optionally, send a message back if needed
-  });
-})();
-
-// Copies the page title, URL, and (if on YouTube) the transcript to the clipboard.
-(async () => {
-  let transcript = '';
-  if (window.location.hostname.endsWith('youtube.com')) {
+// Only run on YouTube pages, otherwise show a reminder
+if (!window.location.hostname.endsWith('youtube.com')) {
+  alert('This extension only works on YouTube pages.');
+} else {
+  (async () => {
+    let transcript = '';
     // Try to find transcript text on the page
-    // YouTube transcript is often in ytd-transcript-segment-renderer elements
     const segments = Array.from(document.querySelectorAll('ytd-transcript-segment-renderer'));
     if (segments.length > 0) {
       transcript = segments.map(seg => seg.innerText).join('\n');
@@ -25,7 +15,7 @@ document.body.style.border = '5px solid orange';
         transcript = Array.from(transcriptBlocks).map(e => e.innerText).join(' ');
       }
     }
-  }
-  const text = `${document.title}\n${window.location.href}${transcript ? '\n\n' + transcript : ''}`;
-  await navigator.clipboard.writeText(text);
-})();
+    const text = `${document.title}\n${window.location.href}${transcript ? '\n\n' + transcript : ''}`;
+    await navigator.clipboard.writeText(text);
+  })();
+}
