@@ -1,10 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Copy Page Title and URL",
+  "name": "Youtube transcript: Copy to clipboard",
   "version": "1.0",
-  "description": "Copies the current page's title and URL to the clipboard.",
+  "description": "Copies the transcript from YouTube videos to clipboard.",
   "permissions": ["activeTab", "scripting", "clipboardWrite"],
-  "background": { "scripts": ["background.js"] },
   "action": {
     "default_popup": "popup.html"
   }

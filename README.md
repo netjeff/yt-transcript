@@ -1,4 +1,4 @@
-# YouTube transcript extract Webextenstion for Firefox
+# YouTube transcript: Copy to clipboard
 
 ## Overview
 
