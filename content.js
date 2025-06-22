@@ -1,6 +1,6 @@
 function log(msg) { try { console.log('[YT Transcript Extension]', msg); } catch(e) {} }
 
-async function doit() {
+async function mainLogic() {
     log('Running extension logic...');
 
     if (!window.location.hostname.endsWith('youtube.com')) {
@@ -10,35 +10,55 @@ async function doit() {
     
     // If transcript is already visible, copy it
     const transcriptSegments = document.querySelectorAll('ytd-transcript-segment-renderer');
-    if (transcriptSegments.length > 0) {
-        log('Transcript already visible, copying to clipboard.');
-        await toClipboard_withTitleUrl(transcriptSegments);
+    if (await visibleTranscript_ToClipboard()) {
+        log('Transcript was already visible, copied to clipboard, done.');
         return;
     }
-    // Expand the video description if collapsed
-    //    FYI:  Using querySelector("#description") does not work, 
-    //    because svg elements in DOM often include id="description" and that matches first.
+
+    // Transcript is not visible, so we need to make it visible first
+
+    // Expand the video description, to get to the show transcript button
+    //    FYI:  Using querySelector("#description") is too generic, 
+    //    and might match svg elements in DOM that often include id="description" and that matches first.
     const videoDescription = document.querySelector('div#description');
     if (!videoDescription) {
         log('Could not find description.');
         return;
     }
-    
-    log('Found description div');
-    console.log(videoDescription.outerHTML);
-
     const expandDescriptionButton = videoDescription.querySelector('#expand');
     if (!expandDescriptionButton) {
         log('Could not find link/button to expand description.');
         return;
     }
     expandDescriptionButton.click();
-    log('Clicked to expand description.');
     await new Promise(res => setTimeout(res, 500));
+    log('Clicked to expand description.');
     
-    log('Visually confirm description is expanded');
+    // Now find and click the button to show transcript
+    const transcriptSectionRenderer = videoDescription.querySelector('ytd-video-description-transcript-section-renderer');
+    if (!transcriptSectionRenderer) {
+        log('Could not find <ytd-video-description-transcript-section-renderer>');
+        return;
+    }
+    const showTranscriptButton = transcriptSectionRenderer.querySelector('button');
+    if (!showTranscriptButton) {
+        log('Could not find <button> in <ytd-video-description-transcript-section-renderer>');
+        return;
+    }
+    showTranscriptButton.click();
+    log('Clicked to show transcript.');
+    await new Promise(res => setTimeout(res, 500));
+
+    // Wait for transcript to become visible, then copy to clipboard
 }
 
+async function visibleTranscript_ToClipboard()
+{
+    const transcriptSegments = document.querySelectorAll('ytd-transcript-segment-renderer');
+    if (transcriptSegments.length < 1) { return false; }
+    await toClipboard_withTitleUrl(transcriptSegments);
+    return true;
+}
 
 async function toClipboard_withTitleUrl(transcriptSegments) {
     const transcript = Array.from(transcriptSegments).map(seg => seg.innerText).join('\n');
@@ -47,4 +67,4 @@ async function toClipboard_withTitleUrl(transcriptSegments) {
     log('Copied transcript to clipboard.');
 }
 
-doit();
+mainLogic();
