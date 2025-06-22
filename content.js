@@ -76,6 +76,10 @@ async function toClipboard_withTitleUrl(transcriptSegments) {
     const text = `${document.title}\n${window.location.href}\n\n${transcript}`;
     await navigator.clipboard.writeText(text);
     log('Copied transcript to clipboard.');
+    // Notify popup that copy is complete
+    if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
+        chrome.runtime.sendMessage({ ytTranscriptCopied: true });
+    }
 }
 
 mainLogic();
