@@ -1,4 +1,9 @@
 // popup.js
-document.getElementById('btn').addEventListener('click', () => {
-  alert('Hello from your Firefox extension!');
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    files: ['content.js']
+  });
+  document.getElementById('status').textContent = 'Copied!';
 });
