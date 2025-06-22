@@ -2,7 +2,7 @@
 
 ## What
 
-Copies the following to clipboard:
+An extension for Firefox that copies the following to clipboard:
 - Page title & url
 - Transcript of the youtube video.
 
@@ -28,3 +28,8 @@ I've not yet published this to addons.mozilla.org.  So you have to install "manu
 1. Select the `manifest.json` file.
 
 You'll have to load this as Temporary every time you start Firefox.   Once I get this published to addons.mozilla.org, you will be able to get it there.
+
+## Todo
+
+- Publish to addons.mozilla.org
+- Try this with Chrome/chromium
