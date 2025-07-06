@@ -68,13 +68,13 @@ async function mainLogic() {
 
 function notifyFailure() {
     if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
-        chrome.runtime.sendMessage({ ytTranscriptCopied: false });
+        chrome.runtime.sendMessage({ ytTranscriptCopiedFailed: false }); // to popup.js
     }
 }
 
 function notifySuccess() {
     if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
-        chrome.runtime.sendMessage({ ytTranscriptCopied: true });
+        chrome.runtime.sendMessage({ ytTranscriptCopied: true }); // to popup.js
     }
 }
 

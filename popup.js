@@ -1,11 +1,11 @@
 // Listen for clipboard completion or failure from content script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const status = document.getElementById('status');
-  if (message && message.ytTranscriptCopied) {
+  if (message && message.ytTranscriptCopied) {  // from content.js
     status.textContent = 'Copied!';
     status.style.color = 'green';
     setTimeout(() => { window.close(); }, 4000);
-  } else if (message && message.ytTranscriptCopyFailed) {
+  } else if (message && message.ytTranscriptCopyFailed) { // from content.js
     status.textContent = 'Copy failed. See web console for details.';
     status.style.color = 'red';
     setTimeout(() => { window.close(); }, 4000);
