@@ -20,12 +20,13 @@ window.addEventListener('DOMContentLoaded', async () => {
     status.textContent = 'This extension only works on YouTube pages.';
     status.style.color = 'red';
     setTimeout(() => { window.close(); }, 4000);
-  } else {
-    status.textContent = 'Copying ...';
-    status.style.color = 'black';
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      files: ['content.js']
-    });
+    return;
   }
+  status.textContent = 'Copying ...';
+  status.style.color = 'black';
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    files: ['content.js']
+  });
+
 });

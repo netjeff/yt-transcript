@@ -66,17 +66,17 @@ async function mainLogic() {
     notifyFailure();
 }
 
-function notifyFailure() {
-    if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
-        chrome.runtime.sendMessage({ ytTranscriptCopiedFailed: false }); // to popup.js
-    }
-}
-
 function notifySuccess() {
     if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
         chrome.runtime.sendMessage({ ytTranscriptCopied: true }); // to popup.js
     }
 }
+
+function notifyFailure() {
+    if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
+        chrome.runtime.sendMessage({ ytTranscriptCopiedFailed: true }); // to popup.js
+    }    
+}    
 
 async function visibleTranscript_ToClipboard() {
     const transcriptSegments = document.querySelectorAll('ytd-transcript-segment-renderer');
